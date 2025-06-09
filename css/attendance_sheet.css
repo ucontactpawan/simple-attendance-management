@@ -1,0 +1,153 @@
+/* Attendance Sheet Styles */
+.att-sheet-main {
+    margin-left: 250px;
+    padding: 20px;
+    padding-top: 80px;
+}
+
+.att-sheet-container {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.att-sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+}
+
+.att-sheet-title {
+    font-size: 1.5rem;
+    margin: 0;
+    color: #333;
+}
+
+.att-sheet-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.att-sheet-date-picker {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.att-sheet-btn-refresh,
+.att-sheet-btn-submit {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.att-sheet-btn-refresh {
+    background-color: #6c757d;
+}
+
+.att-sheet-btn-submit {
+    background-color: #28a745;
+}
+
+.att-sheet-btn-refresh:hover {
+    background-color: #5a6268;
+}
+
+.att-sheet-btn-submit:hover {
+    background-color: #218838;
+}
+
+.att-sheet-table-container {
+    overflow-x: auto;
+}
+
+.att-sheet-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.att-sheet-table th,
+.att-sheet-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.att-sheet-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+}
+
+.att-sheet-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.att-sheet-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.checkbox-cell {
+    text-align: center;
+}
+
+.checkbox-cell input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.status-cell {
+    font-weight: 500;
+}
+
+.status-present {
+    color: #28a745;
+}
+
+.status-absent {
+    color: #dc3545;
+}
+
+.status-half-day {
+    color: #ffc107;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .att-sheet-main {
+        margin-left: 0;
+    }
+
+    .att-sheet-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .att-sheet-controls {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .att-sheet-date-picker {
+        width: 100%;
+    }
+
+    .att-sheet-btn-refresh,
+    .att-sheet-btn-submit {
+        width: 100%;
+        justify-content: center;
+    }
+}

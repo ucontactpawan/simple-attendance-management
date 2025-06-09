@@ -1,0 +1,150 @@
+/* Attendance Logs specific styles */
+.logs-container {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+}
+
+.logs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding: 0 15px;
+}
+
+.logs-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.logs-filters {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  align-items: flex-end;
+}
+
+.logs-filter-group {
+  flex: 1;
+}
+
+.logs-filter-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.logs-filter-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #111827;
+}
+
+.logs-filter-control:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.logs-btn-filter {
+  background-color: #6366f1;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logs-btn-filter:hover {
+  background-color: #4f46e5;
+  transform: translateY(-1px);
+}
+
+.logs-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.logs-table th {
+  background: #f9fafb;
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+}
+
+.logs-table td {
+  padding: 12px 15px;
+  color: #4b5563;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+  vertical-align: middle;
+}
+
+.logs-table tr:hover {
+  background-color: #f9fafb;
+}
+
+.logs-status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.logs-status-ontime {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.logs-status-late {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.logs-status-absent {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .logs-filters {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .logs-filter-group {
+    width: 100%;
+  }
+
+  .logs-container {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .logs-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

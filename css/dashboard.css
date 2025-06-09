@@ -1,0 +1,103 @@
+/* Dashboard specific styles */
+.header {
+  padding: 20px 25px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 25px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.header p {
+  margin: 8px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 0 25px;
+}
+
+.card {
+  background-color: #6c757d;
+  color: white;
+  padding: 25px;
+  border-radius: 12px;
+  position: relative;
+  min-height: 160px;
+  border: none;
+}
+
+.card-icon {
+  margin-bottom: 15px;
+  opacity: 0.85;
+}
+
+.card-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #e5e7eb;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.card h3 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+}
+
+.circle-progress {
+  margin: 10px 0;
+}
+
+.circle-progress svg circle {
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dashoffset 0.3s;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .card-container {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    padding: 0 15px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .card h3 {
+    font-size: 28px;
+    bottom: 20px;
+    right: 20px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .header {
+    padding: 15px 20px;
+  }
+
+  .header h2 {
+    font-size: 20px;
+  }
+
+  .card-container {
+    grid-template-columns: 1fr;
+  }
+}
