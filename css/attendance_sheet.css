@@ -3,6 +3,7 @@
     margin-left: 250px;
     padding: 20px;
     padding-top: 80px;
+    width: 100%;
 }
 
 .att-sheet-container {
@@ -12,91 +13,160 @@
     padding: 20px;
 }
 
+.table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #374151;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+    padding: 12px;
+    color: #6b7280;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+}
+
 .att-sheet-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #eee;
+    padding: 15px 0;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .att-sheet-title {
     font-size: 1.5rem;
+    font-weight: 600;
+    color: #374151;
     margin: 0;
-    color: #333;
 }
 
 .att-sheet-controls {
     display: flex;
-    gap: 10px;
     align-items: center;
+    gap: 15px;
 }
 
-.att-sheet-date-picker {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+.date-container {
+    width: 200px;
 }
 
-.att-sheet-btn-refresh,
-.att-sheet-btn-submit {
-    padding: 8px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+.user-type-controls {
     display: flex;
     align-items: center;
-    gap: 5px;
-    color: white;
-    transition: background-color 0.3s;
+    gap: 15px;
 }
 
-.att-sheet-btn-refresh {
-    background-color: #6c757d;
+.form-check-inline {
+    margin-right: 1rem;
 }
 
-.att-sheet-btn-submit {
-    background-color: #28a745;
+.form-check-input:checked {
+    background-color: #4F46E5;
+    border-color: #4F46E5;
 }
 
-.att-sheet-btn-refresh:hover {
-    background-color: #5a6268;
+.form-check-label {
+    cursor: pointer;
 }
 
-.att-sheet-btn-submit:hover {
-    background-color: #218838;
+.form-label {
+    margin-top: 2px;
+    font-weight: 600;
+    padding: 5px;
+    margin-bottom: 5PX;
+}
+
+.col-form-label {
+    font-weight: 600;
+}
+
+.att-sheet-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.submit-attendance {
+    background-color: #4F46E5;
+    border-color: #4F46E5;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.submit-attendance:hover {
+    background-color: #4338CA;
+    border-color: #4338CA;
+    box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
+}
+
+.submit-attendance i {
+    font-size: 16px;
 }
 
 .att-sheet-table-container {
-    overflow-x: auto;
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .att-sheet-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.att-sheet-table th,
-.att-sheet-table td {
-    padding: 12px;
-    text-align: left;
-    border: 1px solid #ddd;
+    min-width: 1500px;
 }
 
 .att-sheet-table th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #333;
+    background-color: #F9FAFB;
+    padding: 16px;
+    text-align: left;
+    color: #374151;
+    font-weight: 500;
+    border-bottom: 2px solid #E5E7EB;
 }
 
-.att-sheet-table tr:nth-child(even) {
-    background-color: #f9f9f9;
+.att-sheet-table td {
+    padding: 16px;
+    border-bottom: 1px solid #E5E7EB;
+    color: #4B5563;
 }
 
-.att-sheet-table tr:hover {
-    background-color: #f5f5f5;
+.time-cell input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 120px;
+}
+
+.status-cell .badge {
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+.badge.bg-secondary {
+    background-color: #9CA3AF !important;
+}
+
+.badge.bg-success {
+    background-color: #10B981 !important;
+}
+
+.badge.bg-warning {
+    background-color: #F59E0B !important;
+}
+
+.badge.bg-primary {
+    background-color: #6366F1 !important;
 }
 
 .checkbox-cell {
@@ -107,24 +177,53 @@
     width: 18px;
     height: 18px;
     cursor: pointer;
+    border-radius: 4px;
 }
 
-.status-cell {
-    font-weight: 500;
+.checkbox-cell input[type="checkbox"]:checked {
+    background-color: #6366F1;
+    border-color: #6366F1;
 }
 
-.status-present {
-    color: #28a745;
+.time-cell input[type="time"] {
+    border: 1px solid #E5E7EB;
+    border-radius: 4px;
+    padding: 6px;
+    width: 120px;
 }
 
-.status-absent {
-    color: #dc3545;
+/* loader Design */
+.loader-container{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+.loader{
+    width: 48px;
+    height: 48px;
+    border: 4px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 4px solid #4F46E5;
+    animation: spin 1s linear infinite;
+}
+.loader-text{
+    position: absolute;
+    margin-top: 80px;
+    color: #374151;
+    font-size: 16px;
 }
 
-.status-half-day {
-    color: #ffc107;
+@keyframes spin{
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
 }
-
 /* Responsive Design */
 @media (max-width: 768px) {
     .att-sheet-main {
@@ -138,14 +237,8 @@
 
     .att-sheet-controls {
         width: 100%;
-        flex-wrap: wrap;
     }
 
-    .att-sheet-date-picker {
-        width: 100%;
-    }
-
-    .att-sheet-btn-refresh,
     .att-sheet-btn-submit {
         width: 100%;
         justify-content: center;

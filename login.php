@@ -7,23 +7,27 @@ if (isset($_POST['signin'])) {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $password = $_POST['password'];
 
-    $query = "SELECT * FROM users WHERE email= '$email'";
-    $result = mysqli_query($conn, $query);
+    $query = "SELECT * FROM employees WHERE email= ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "s", $email);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-    if (mysqli_num_rows($result) > 0) {
+    if(mysqli_num_rows($result) > 0){
         $user = mysqli_fetch_assoc($result);
-        if (password_verify($password, $user['password'])) {
+        if(password_verify($password, $user['password'])){
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['name'];
-            $_SESSION['user_role'] = $user['role'];
-            header('location: index.php');
+            $_SESSION['user_role'] = $user['position'];
+            header("Location: dashboard.php");
             exit();
-        } else {
-            $error = "Invalid Password";
+        }else{
+            $error = "Invalid password. Please try again.";
         }
-    } else {
+    }else{
         $error = "User not found! please register first.";
     }
+    
 }
 
 ?>

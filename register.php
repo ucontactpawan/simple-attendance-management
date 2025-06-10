@@ -6,25 +6,32 @@ if (isset($_POST['signup'])) {
     $name  = $_POST['name'];
     $email = $_POST['email'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $role = 'employee'; // Default role for new users
+    $position = 'employee'; // Default postion for new employees
 
     //Now check if email is already registered
-    $check_query = "SELECT * FROM users WHERE email = '$email'";
-    $check_result = mysqli_query($conn, $check_query);
+    $check_query = "SELECT * FROM employees WHERE email = ?";
+    $stmt = mysqli_prepare($conn, $check_query);
+    mysqli_stmt_bind_param($stmt, "s", $email);
+    mysqli_stmt_execute($stmt);
+    $check_result = mysqli_stmt_get_result($stmt);
 
-    if (mysqli_num_rows($check_result) > 0) {
+    if(mysqli_num_rows($check_result) > 0){
         $error = "Email already registered. Please use a different email.";
-    } else {
-        // Insert the new user into the database
-        $query = "INSERT INTO users (name,email,password,role) VALUES ('$name', '$email', '$password', '$role')";
-        if (mysqli_query($conn, $query)) {
-            $_SESSION['user_id'] = mysqli_insert_id($conn); // Get the last inserted user ID
-            $_SESSION['user_name'] = $name; // Store the user's name in session
-            $_SESSION['user_role'] = $role; // Store the user's role in session
-            header("Location: index.php"); // Redirect to the index page
+    }else {
+
+        // now inserting the new employee
+        $insert_query = "INSERT INTO employees (name, email,password,position) VALUES (?,?,?,?)";  
+        $stmt = mysqli_prepare($conn, $insert_query);
+        mysqli_stmt_bind_param($stmt, "ssss", $name, $email, $password, $position);
+        
+        if(mysqli_stmt_execute($stmt)){
+            $_SESSION['user_id'] = mysqli_insert_id($conn);
+            $_SESSION['user_name'] = $name;
+            $_SESSION['user_role']= $position;
+            header("Location: dashboard.php");
             exit();
-        } else {
-            $error = "Registration failed!: " . mysqli_error($conn);
+        }else{
+            $error = "Failed to register. Please try again.";
         }
     }
 }

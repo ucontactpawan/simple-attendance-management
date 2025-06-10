@@ -11,17 +11,28 @@ if (!isset($_SESSION['user_id'])) {
 
 // Get filter values
 $employee_id = isset($_GET['employee_id']) ? $_GET['employee_id'] : '';
-$date_from = isset($_GET['date_from']) ? $_GET['date_from'] : date('Y-m-01'); // First day of current month
-$date_to = isset($_GET['date_to']) ? $_GET['date_to'] : date('Y-m-d'); // Current date
+$date_from = isset($_GET['date_from']) ? $_GET['date_from'] : date('Y-m-01'); 
+$date_to = isset($_GET['date_to']) ? $_GET['date_to'] : date('Y-m-t'); // Last day of current month
 $status = isset($_GET['status']) ? $_GET['status'] : '';
 
-// Build query
-$query = "SELECT a.*, e.name as employee_name 
-          FROM attendance_logs a 
+// Query to get attendance logs with employee names
+$query = "SELECT 
+            a.*, 
+            e.name as employee_name,
+            CASE
+                WHEN a.status = '0' THEN 'Absent'
+                WHEN a.status = '1' THEN 'Present'
+            END as status,
+            CASE
+                WHEN a.in_time IS NOT NULL AND a.out_time IS NOT NULL 
+                THEN TIMESTAMPDIFF(MINUTE, a.in_time, a.out_time)
+                ELSE NULL
+            END as total_minutes
+          FROM attendance a 
           JOIN employees e ON a.employee_id = e.id 
           WHERE 1=1";
 
-$params = [];
+$params = array();
 $types = "";
 
 if ($employee_id) {
@@ -42,19 +53,28 @@ if ($date_to) {
     $types .= "s";
 }
 
-$query .= " ORDER BY a.date DESC, a.check_in ASC";
+$query .= " ORDER BY a.date DESC, e.name ASC";
 
-// Prepare and execute statement
+// Add error checking after prepare statement
 $stmt = mysqli_prepare($conn, $query);
-if ($params) {
-    mysqli_stmt_bind_param($stmt, $types, ...$params);
+if ($stmt === false) {
+    die('Prepare failed: ' . mysqli_error($conn));
 }
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
 
-// Get all employees for filter dropdown
-$employees_query = "SELECT id, name FROM employees ORDER BY name";
-$employees_result = mysqli_query($conn, $employees_query);
+if (!empty($params)) {
+    if (!mysqli_stmt_bind_param($stmt, $types, ...$params)) {
+        die('Binding parameters failed: ' . mysqli_stmt_error($stmt));
+    }
+}
+
+if (!mysqli_stmt_execute($stmt)) {
+    die('Execute failed: ' . mysqli_stmt_error($stmt));
+}
+
+$result = mysqli_stmt_get_result($stmt);
+if ($result === false) {
+    die('Getting result set failed: ' . mysqli_stmt_error($stmt));
+}
 ?>
 
 <!DOCTYPE html>
@@ -64,15 +84,10 @@ $employees_result = mysqli_query($conn, $employees_query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attendance Logs</title>
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Base styles -->
     <link rel="stylesheet" href="css/style.css">
-    <!-- Component styles -->
     <link rel="stylesheet" href="css/navbar.css">
-    <!-- Attendance Logs specific styles -->
     <link rel="stylesheet" href="css/attendance_logs.css">
 </head>
 
@@ -82,94 +97,132 @@ $employees_result = mysqli_query($conn, $employees_query);
 
     <div class="main-content">
         <div class="logs-container">
-            <div class="logs-header">
-                <h2 class="logs-title">Attendance Logs</h2>
-                <button class="logs-btn-filter" id="exportLogs">
-                    <i class="fas fa-download"></i> Export
-                </button>
+            <div class="filter-header">
+                <div class="filter-group">
+                    <label>Select Month</label>
+                    <select class="form-select" id="monthFilter">
+                        <?php 
+                        $months = [
+                            '01' => 'January', '02' => 'February', '03' => 'March',
+                            '04' => 'April', '05' => 'May', '06' => 'June',
+                            '07' => 'July', '08' => 'August', '09' => 'September',
+                            '10' => 'October', '11' => 'November', '12' => 'December'
+                        ];
+                        foreach ($months as $value => $label) {
+                            $selected = $value == date('m') ? 'selected' : '';
+                            echo "<option value='$value' $selected>$label</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Select Year</label>
+                    <select class="form-select" id="yearFilter">
+                        <?php 
+                        $currentYear = date('Y');
+                        for($i = $currentYear - 2; $i <= $currentYear + 2; $i++) {
+                            $selected = $i == $currentYear ? 'selected' : '';
+                            echo "<option value='$i' $selected>$i</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Select Employee</label>
+                    <select class="form-select" id="employeeFilter">
+                        <option value="">All Employees</option>
+                        <?php
+                        $emp_query = "SELECT id, name FROM employees ORDER BY name ASC";
+                        $emp_result = mysqli_query($conn, $emp_query);
+                        while ($emp = mysqli_fetch_assoc($emp_result)) {
+                            $selected = $emp['id'] == $employee_id ? 'selected' : '';
+                            echo "<option value='{$emp['id']}' $selected>" . 
+                                 htmlspecialchars($emp['name']) . "</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
             </div>
 
-            <form id="logsFilterForm" class="logs-filters">
-                <div class="logs-filter-group">
-                    <label for="employeeFilter">Employee</label>
-                    <select id="employeeFilter" class="logs-filter-control">
-                        <option value="">All Employees</option>
-                        <?php while ($emp = mysqli_fetch_assoc($employees_result)) { ?>
-                            <option value="<?php echo $emp['id']; ?>" <?php echo ($employee_id == $emp['id']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($emp['name']); ?>
-                            </option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="logs-filter-group">
-                    <label for="dateFrom">Date From</label>
-                    <input type="date" id="dateFrom" class="logs-filter-control logs-date-input"
-                        value="<?php echo $date_from; ?>">
-                </div>
-                <div class="logs-filter-group">
-                    <label for="dateTo">Date To</label>
-                    <input type="date" id="dateTo" class="logs-filter-control logs-date-input"
-                        value="<?php echo $date_to; ?>">
-                </div>
-                <div class="logs-filter-group">
-                    <label for="statusFilter">Status</label>
-                    <select id="statusFilter" class="logs-filter-control">
-                        <option value="">All Status</option>
-                        <option value="ontime" <?php echo ($status == 'ontime') ? 'selected' : ''; ?>>On Time</option>
-                        <option value="late" <?php echo ($status == 'late') ? 'selected' : ''; ?>>Late</option>
-                        <option value="absent" <?php echo ($status == 'absent') ? 'selected' : ''; ?>>Absent</option>
-                    </select>
-                </div>
-                <button type="submit" class="logs-btn-filter">Apply Filters</button>
-                <button type="button" id="clearFilters" class="logs-btn-filter" style="background-color: #6b7280;">Clear</button>
-            </form>
+            <div class="total-hours">
+                Total Working Hours <span id="totalWorkingHours">0Hr 0Min</span>
+            </div>
 
-            <table class="logs-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>                        <th>Employee</th>
-                        <th>Check In</th>
-                        <th>Check Out</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td><?php echo date('M d, Y', strtotime($row['date'])); ?></td>
+                            <th>Date</th>
+                            <th>Employee</th>
+                            <th>In Time</th>
+                            <th>Out Time</th>
+                            <th>Late Time</th>
+                            <th>Total Hours</th>
+                            <th>Status</th>
+                            <th>Comments</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php while ($row = mysqli_fetch_assoc($result)) { 
+                        $totalMinutes = $row['total_minutes'] ?? 0;
+                        $hours = floor($totalMinutes / 60);
+                        $minutes = $totalMinutes % 60;
+                        
+                        $lateMinutes = 0;
+                        if ($row['in_time']) {
+                            $inTime = strtotime($row['in_time']);
+                            $standardTime = strtotime('09:30:00');
+                            if ($inTime > $standardTime) {
+                                $lateMinutes = round(($inTime - $standardTime) / 60);
+                            }
+                        }
+                    ?>
+                        <tr>
+                            <td><?php echo date('D, d M Y', strtotime($row['date'])); ?></td>
                             <td><?php echo htmlspecialchars($row['employee_name']); ?></td>
-                            <td><?php echo $row['check_in'] ? date('h:i A', strtotime($row['check_in'])) : '-'; ?></td>
-                            <td><?php echo $row['check_out'] ? date('h:i A', strtotime($row['check_out'])) : '-'; ?></td>
+                            <td><?php echo $row['in_time'] ? date('h:i A', strtotime($row['in_time'])) : '-'; ?></td>
+                            <td><?php echo $row['out_time'] ? date('h:i A', strtotime($row['out_time'])) : '-'; ?></td>
+                            <td><?php echo $lateMinutes > 0 ? $lateMinutes . 'm' : '-'; ?></td>
+                            <td class="total-time"><?php
+                            if($totalMinutes > 0){
+                                $hours = floor($totalMinutes / 60);
+                                $minutes = $totalMinutes % 60;
+                                printf('%02dh %02dm', $hours, $minutes);
+                            }else{
+                                echo '-';
+                            } ?></td>
                             <td>
-                                <div data-entry-time="<?php echo $row['check_in']; ?>">
-                                    <?php 
-                                    if ($row['check_in']) {
-                                        $checkInTime = new DateTime($row['check_in']);
-                                        $standardTime = new DateTime('09:30:00');
-                                        if ($checkInTime > $standardTime) {
-                                            echo '<span class="badge bg-warning">Late</span>';
-                                        } else {
-                                            echo '<span class="badge bg-success">On Time</span>';
-                                        }
-                                    } else {
-                                        echo '<span class="badge bg-danger">Absent</span>';
-                                    }
-                                    ?>
-                                </div>
+                                <?php 
+                                $statusClass = match($row['status']) {
+                                    'On Time' => 'bg-success',
+                                    'Late' => 'bg-warning',
+                                    'Absent' => 'bg-danger',
+                                    default => 'bg-secondary'
+                                };
+                                echo "<span class='badge {$statusClass}'>{$row['status']}</span>";
+                                ?>
+                            </td>
+                            <td><?php echo htmlspecialchars($row['comments'] ?? '-'); ?></td>
+                            <td>
+                                <button class="btn btn-sm btn-primary edit-btn" 
+                                        title="Edit" 
+                                        data-id="<?php echo $row['id']; ?>">
+                                    <i class="fas fa-edit"></i>
+                                </button>
                             </td>
                         </tr>
                     <?php } ?>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <?php include 'includes/footer.php'; ?>
 
-    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/attendance_logs.js"></script>
 </body>
-
 </html>

@@ -52,7 +52,8 @@ echo "-->";
       <table id="employeeTable">
         <thead>
           <tr>
-            <th>Employee ID</th>            <th>Name</th>
+            <th>Employee ID</th>         
+            <th>Name</th>
             <th>Position</th>
             <th>Contact</th>
             <th>Email</th>

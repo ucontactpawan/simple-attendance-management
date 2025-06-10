@@ -30,64 +30,64 @@ include 'includes/auth.php';
 
     <div class="att-sheet-main">
         <div class="att-sheet-container">
-            <div class="att-sheet-header">
-                <h2 class="att-sheet-title">Attendance Sheet</h2>
-                <div class="att-sheet-controls">
-                    <input type="date" class="att-sheet-date-picker" id="attendanceDate" value="<?php echo date('Y-m-d'); ?>">
-                    <button class="att-sheet-btn-refresh" id="refreshBtn">
-                        <i class="fas fa-sync"></i> Refresh
-                    </button>
-                    <button class="att-sheet-btn-submit" id="submitAttendance">
-                        <i class="fas fa-save"></i> Submit Attendance
-                    </button>
+            <!-- Header Section -->
+            <div class="header">
+                <h3 class="att-sheet-title">Add Attendance</h3>
+                <div class="d-flex align-items-center justify-content-between mt-3">
+                    <div class="date-container">
+                        <div class="input-group">
+                            <input type="date" class="form-control" id="attendanceDate" value="<?php echo date('Y-m-d'); ?>"
+                                onchange="loadAttendanceData()">
+                        </div>
+                    </div>
+
+                    <div class="user-type-controls">
+                        <label class="form-label me-2">User Type:</label>
+                        <div class="form-check form-check-inline mb-0">
+                            <input class="form-check-input" type="radio" name="attendanceType" id="singleAttendance"
+                                value="single" onchange="loadAttendanceData()">
+                            <label class="form-check-label" for="singleAttendance">Single</label>
+                        </div>
+                        <div class="form-check form-check-inline mb-0">
+                            <input class="form-check-input" type="radio" name="attendanceType" id="multipleAttendance"
+                                value="multiple" onchange="loadAttendanceData()">
+                            <label class="form-check-label" for="multipleAttendance">Multiple</label>
+                        </div>
+                        <div class="form-check form-check-inline mb-0">
+                            <input class="form-check-input" type="radio" name="attendanceType" id="allAttendance"
+                                value="all" onchange="loadAttendanceData()">
+                            <label class="form-check-label" for="allAttendance">All</label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="att-sheet-table-container">
-                <form id="attendanceForm">
-                    <table class="att-sheet-table">
+            <!-- Table Container -->
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table">
                         <thead>
                             <tr>
+                                <th>Date</th>
                                 <th>Employee</th>
-                                <th>Position</th>
-                                <th>Check In</th>
-                                <th>Check Out</th>
+                                <th>In Time</th>
+                                <th>Out Time</th>
                                 <th>Status</th>
+                                <th>Comments</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="attendanceTableBody">
-                        <?php
-                            // Fetch employees from database
-                            $query = "SELECT * FROM employees ORDER BY name ASC";
-                            $result = mysqli_query($conn, $query);
-                            
-                            // Add error checking
-                            if (!$result) {
-                                die("Query failed: " . mysqli_error($conn));
-                            }
-
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                echo '<tr data-employee-id="' . $row['id'] . '">';
-                                echo '<td>' . htmlspecialchars($row['name']) . '</td>';
-                                echo '<td>' . htmlspecialchars($row['position'] ?? 'N/A') . '</td>'; // Changed from position_name to position
-                                echo '<td class="checkbox-cell">
-                                        <input type="checkbox" name="check_in[' . $row['id'] . ']" class="check-in" />
-                                      </td>';
-                                echo '<td class="checkbox-cell">
-                                        <input type="checkbox" name="check_out[' . $row['id'] . ']" class="check-out" />
-                                      </td>';
-                                echo '<td class="status-cell">Not Set</td>';
-                                echo '</tr>';
-                            }
-                        ?>
+                            <!-- Table content will be populated by JavaScript -->
                         </tbody>
                     </table>
-                </form>
+                </div>
             </div>
+
         </div>
     </div>
-
-    <!-- Success Modal -->
+<!-- 
+    Success Modal -->
     <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -112,4 +112,5 @@ include 'includes/auth.php';
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/attendance_sheet.js"></script>
 </body>
+
 </html>
