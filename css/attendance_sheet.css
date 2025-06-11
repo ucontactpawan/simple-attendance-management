@@ -192,6 +192,7 @@
     width: 120px;
 }
 
+<<<<<<< HEAD
 .employee-info {
     padding: 5px 0;
 }
@@ -230,6 +231,8 @@
     cursor: not-allowed;
 }
 
+=======
+>>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
 /* loader Design */
 .loader-container{
     position: fixed;
@@ -262,6 +265,7 @@
     0% {transform: rotate(0deg);}
     100% {transform: rotate(360deg);}
 }
+<<<<<<< HEAD
 
 /* Table Styles */
 .table-container {
@@ -342,4 +346,25 @@ textarea.form-control-sm {
 .btn-save-attendance {
     float: right;
     margin: 10px 0;
+=======
+/* Responsive Design */
+@media (max-width: 768px) {
+    .att-sheet-main {
+        margin-left: 0;
+    }
+
+    .att-sheet-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .att-sheet-controls {
+        width: 100%;
+    }
+
+    .att-sheet-btn-submit {
+        width: 100%;
+        justify-content: center;
+    }
+>>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
 }

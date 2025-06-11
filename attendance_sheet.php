@@ -42,6 +42,7 @@ include 'includes/auth.php';
                     </div>
 
                     <div class="user-type-controls">
+<<<<<<< HEAD
                         <label class="form-label me-2">User Type:</label>                        <div class="form-check form-check-inline mb-0">
                             <input class="form-check-input" type="radio" name="attendanceType" id="singleAttendance"
                                 value="single" checked>
@@ -50,11 +51,28 @@ include 'includes/auth.php';
                         <div class="form-check form-check-inline mb-0">
                             <input class="form-check-input" type="radio" name="attendanceType" id="allAttendance"
                                 value="all">
+=======
+                        <label class="form-label me-2">User Type:</label>
+                        <div class="form-check form-check-inline mb-0">
+                            <input class="form-check-input" type="radio" name="attendanceType" id="singleAttendance"
+                                value="single" onchange="loadAttendanceData()">
+                            <label class="form-check-label" for="singleAttendance">Single</label>
+                        </div>
+                        <div class="form-check form-check-inline mb-0">
+                            <input class="form-check-input" type="radio" name="attendanceType" id="multipleAttendance"
+                                value="multiple" onchange="loadAttendanceData()">
+                            <label class="form-check-label" for="multipleAttendance">Multiple</label>
+                        </div>
+                        <div class="form-check form-check-inline mb-0">
+                            <input class="form-check-input" type="radio" name="attendanceType" id="allAttendance"
+                                value="all" onchange="loadAttendanceData()">
+>>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
                             <label class="form-check-label" for="allAttendance">All</label>
                         </div>
                     </div>
                 </div>
             </div>
+<<<<<<< HEAD
             <!-- Table Container -->
             <div class="table-container">
                 <div class="table-responsive">
@@ -66,24 +84,47 @@ include 'includes/auth.php';
                                 <th scope="col">In Time</th>
                                 <th scope="col">Out Time</th>
                                 <th scope="col">Comments</th>
+=======
+
+            <!-- Table Container -->
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Employee</th>
+                                <th>In Time</th>
+                                <th>Out Time</th>
+                                <th>Status</th>
+                                <th>Comments</th>
+                                <th>Actions</th>
+>>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
                             </tr>
                         </thead>
                         <tbody id="attendanceTableBody">
                             <!-- Table content will be populated by JavaScript -->
                         </tbody>
                     </table>
+<<<<<<< HEAD
                 </div>                <div class="mt-3">
                     <div id="saveBtnContainer" class="text-end mt-3">
                         <button type="button" class="btn btn-primary btn-save-attendance">
                             <i class="fas fa-save"></i> Save
                         </button>
                     </div>
+=======
+>>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
                 </div>
             </div>
 
         </div>
     </div>
+<<<<<<< HEAD
     <!-- 
+=======
+<!-- 
+>>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
     Success Modal -->
     <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">

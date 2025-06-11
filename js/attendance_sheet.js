@@ -2,25 +2,83 @@ $(document).ready(function () {
   // initializing current date
   const today = new Date().toISOString().split("T")[0];
   $("#attendanceDate").val(today);
+<<<<<<< HEAD
   loadAttendanceData();
+=======
+  loadAttendance(today);
+>>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
 
 
   //date change event handler
   $("#attendanceDate").change(function () {
+<<<<<<< HEAD
     loadAttendanceData();
   });
 
   // Attendance type change handler
   $('input[name="attendanceType"]').change(function() {
     loadAttendanceData();
+=======
+    const selectedDate = $(this).val();
+    loadAttendance(selectedDate);
+  });
+
+  // Checkbox change handler
+  $(".check-in, .check-out").change(function () {
+    const row = $(this).closest("tr");
+    updateRowStatus(row);
+>>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
   });
 
   // Submit attendance handler
   $("#submitAttendance").click(function (e) {
     e.preventDefault();
+<<<<<<< HEAD
     saveAttendance();
   });
   
+=======
+
+    let attendanceData = [];
+    $("#attendanceTableBody tr").each(function () {
+      const row = $(this);
+      const employeeId = row.data("employee-id");
+      const checkIn = row.find(".check-in").prop("checked");
+      const checkOut = row.find(".check-out").prop("checked");
+      const inTime = row.find(".in-time").val();
+      const outTime = row.find(".out-time").val();
+
+      attendanceData.push({
+        employee_id: employeeId,
+        check_in: checkIn,
+        check_out: checkOut,
+        in_time: inTime,
+        out_time: outTime
+      });
+    });
+
+    $.ajax({
+      url: "includes/save_attendance.php",
+      type: "POST",
+      data: {
+        date: $("#attendanceDate").val(),
+        attendance: JSON.stringify(attendanceData)
+      },
+      dataType: "json",
+      success: function (response) {
+        if (response.status === "success") {
+          $("#successModal").modal("show");
+        } else {
+          alert("Error: " + (response.message || "Unknown error occurred"));
+        }
+      },
+      error: function (xhr, status, error) {
+        alert("Error saving attendance: " + error);
+      }
+    });
+  });
+
+>>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
   function updateRowStatus(row) {
     const checkIn = row.find(".check-in").prop("checked");
     const checkOut = row.find(".check-out").prop("checked");
@@ -85,6 +143,7 @@ function hideLoader() {
 function loadAttendanceData() {
     const date = document.getElementById('attendanceDate').value;
     const selectedType = document.querySelector('input[name="attendanceType"]:checked');
+<<<<<<< HEAD
     const type = selectedType ? selectedType.value : 'single';
     
     localStorage.setItem('attendanceType', type);
@@ -164,6 +223,16 @@ function loadAttendanceData() {
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
+=======
+    const type = selectedType ? selectedType.value : '';
+
+    showLoader(); 
+
+    fetch(`includes/get_attendance_data.php?date=${date}&type=${type}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+>>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
             }
             return response.json();
         })
@@ -177,6 +246,7 @@ function loadAttendanceData() {
 
             const data = response.data || [];
             
+<<<<<<< HEAD
             if (type === 'single') {
                 // Create a new row for single employee selection
                 const tr = document.createElement('tr');
@@ -253,6 +323,26 @@ function loadAttendanceData() {
                             rows="2" 
                             name="comments"
                             placeholder="Add comments..."></textarea>
+=======
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center">No attendance records found</td></tr>';
+                return;
+            }
+            
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${formatDate(date)}</td>
+                    <td>${row.employee_name}</td>
+                    <td>${row.in_time || '-'}</td>
+                    <td>${row.out_time || '-'}</td>
+                    <td><span class="badge ${getStatusBadgeClass(row.status)}">${row.status === '1' ? 'Present' : 'Absent'}</span></td>
+                    <td>${row.comments || '-'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary edit-btn" data-id="${row.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+>>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -260,6 +350,7 @@ function loadAttendanceData() {
         })
         .catch(error => {
             console.error('Error:', error);
+<<<<<<< HEAD
             alert('Error loading attendance data: ' + error.message);
         })
         .finally(() => {
@@ -448,3 +539,33 @@ function saveAttendance() {
         hideLoader();
     });
 }
+=======
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Error loading attendance data: ${error.message}</td></tr>`;
+        })
+        .finally(() => {
+            hideLoader(); // Hide loader when done
+        });
+}
+
+function formatDate(dateString) {
+    const options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+}
+
+function getStatusBadgeClass(status) {
+    return status === '1' ? 'bg-success' : 'bg-secondary';
+}
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+    // Load initial data without any type selected
+    loadAttendanceData();
+    
+    // Add event listeners
+    document.querySelectorAll('input[name="attendanceType"]').forEach(radio => {
+        radio.addEventListener('change', loadAttendanceData);
+    });
+    
+    document.getElementById('attendanceDate').addEventListener('change', loadAttendanceData);
+});
+>>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
