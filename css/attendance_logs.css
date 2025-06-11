@@ -1,0 +1,215 @@
+/* Attendance Logs specific styles */
+.logs-container {
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+}
+
+/* Filter header styles */
+.filter-header {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.form-select {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.form-select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+  outline: none;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+/* Button styles */
+.btn {
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn i {
+  font-size: 0.875rem;
+}
+
+.btn-primary {
+  background-color: #6366f1;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #4f46e5;
+}
+
+.btn-secondary {
+  background-color: #9ca3af;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: #6b7280;
+}
+
+.btn-success {
+  background-color: #10b981;
+  border: none;
+}
+
+.btn-success:hover {
+  background-color: #059669;
+}
+
+/* Table styles */
+.table-responsive {
+  margin-top: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #374151;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+  padding: 12px;
+  color: #6b7280;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+/* Status badges */
+.badge {
+  padding: 6px 12px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  border-radius: 4px;
+}
+
+.bg-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.bg-warning {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.bg-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Total hours display */
+.total-hours {
+  background-color: #f9fafb;
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  font-weight: 500;
+  color: #374151;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: right;
+  margin-bottom: 20px;
+  font-size: 1.1em;
+}
+
+#totalWorkingHours {
+  background-color: #6366f1;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-left: 8px;
+  font-weight: 600;
+}
+
+.total-time {
+    font-family: monospace;
+    text-align: right;
+    padding-right: 20px !important;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .logs-container {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .filter-header {
+    grid-template-columns: 1fr;
+    padding: 15px;
+  }
+
+  .filter-controls {
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .total-hours {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  #totalWorkingHours {
+    margin-top: 8px;
+    margin-left: 0;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px 12px;
+    font-size: 0.8125rem;
+  }
+}
