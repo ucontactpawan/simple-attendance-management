@@ -1,9 +1,10 @@
 /* Attendance Sheet Styles */
 .att-sheet-main {
     margin-left: 250px;
-    padding: 20px;
+    padding: 24px;
     padding-top: 80px;
-    width: 100%;
+    width: calc(100% - 250px);
+    background-color: #f8f9fa;
 }
 
 .att-sheet-container {
@@ -14,7 +15,7 @@
 }
 
 .table thead th {
-    background-color: #f8f9fa;
+    background-color: #ffffff;
     font-weight: 600;
     color: #374151;
     padding: 12px;
@@ -51,18 +52,73 @@
     gap: 15px;
 }
 
+.date-type-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.controls-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.date-section, .user-type-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.labels-row {
+    display: flex;
+    align-items: center;
+    gap: 50px; /* Space between Date and User Type labels */
+}
+
+.controls-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
 .date-container {
-    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.date-container .form-label {
+    margin-bottom: 0;
+    margin-top: 0;
+    padding: 0;
+    color: #374151;
+    font-weight: 500;
 }
 
 .user-type-controls {
     display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.user-type-controls .form-label {
+    margin-bottom: 0;
+    margin-top: 0;
+    padding: 0;
+    color: #374151;
+    font-weight: 500;
+    display: block;  /* Ensures label takes full width */
+}
+
+.radio-group {
+    display: flex;
     align-items: center;
     gap: 15px;
+    height: 60px; /* Reduced from 60px to match date picker height */
 }
 
 .form-check-inline {
-    margin-right: 1rem;
+    margin-right: 0;
 }
 
 .form-check-input:checked {
@@ -75,10 +131,10 @@
 }
 
 .form-label {
-    margin-top: 2px;
-    font-weight: 600;
-    padding: 5px;
-    margin-bottom: 5PX;
+    margin: 0;
+    color: #374151;
+    font-weight: 500;
+    font-size: 14px;
 }
 
 .col-form-label {
@@ -122,23 +178,44 @@
 
 .att-sheet-table {
     width: 100%;
-    border-collapse: collapse;
-    min-width: 1500px;
+    margin-bottom: 1rem;
+    color: #212529;
+    vertical-align: top;
+    border-color: #dee2e6;
+    background-color: #fff;
 }
 
-.att-sheet-table th {
-    background-color: #F9FAFB;
-    padding: 16px;
-    text-align: left;
-    color: #374151;
+.att-sheet-table > thead {
+    vertical-align: bottom;
+}
+
+.att-sheet-table > thead th {
+    padding: 0.75rem;
+    border-bottom: 2px solid #dee2e6;
     font-weight: 500;
-    border-bottom: 2px solid #E5E7EB;
+    color: #212529;
+    text-align: left;
+    white-space: nowrap;
 }
 
-.att-sheet-table td {
-    padding: 16px;
-    border-bottom: 1px solid #E5E7EB;
-    color: #4B5563;
+.att-sheet-table > tbody {
+    background-color: #fff;
+}
+
+.att-sheet-table > tbody > tr {
+    background-color: #fff;
+}
+
+.att-sheet-table > tbody > tr:hover {
+    background-color: rgba(0, 0, 0, 0.075);
+    --bs-table-accent-bg: transparent;
+}
+
+.att-sheet-table > tbody > tr > td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+    background-color: inherit;
 }
 
 .time-cell input {
@@ -174,10 +251,13 @@
 }
 
 .checkbox-cell input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.25rem;
+    vertical-align: top;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
     cursor: pointer;
-    border-radius: 4px;
 }
 
 .checkbox-cell input[type="checkbox"]:checked {
@@ -186,53 +266,47 @@
 }
 
 .time-cell input[type="time"] {
-    border: 1px solid #E5E7EB;
-    border-radius: 4px;
-    padding: 6px;
-    width: 120px;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    width: 130px;
+    background-color: #fff;
 }
 
-<<<<<<< HEAD
+.time-cell input[type="time"]:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    outline: 0;
+}
+
 .employee-info {
-    padding: 5px 0;
+    padding: 0.25rem 0;
 }
 
 .employee-info .name {
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 4px;
+    font-weight: 500;
+    color: #212529;
+    margin-bottom: 0.25rem;
 }
 
 .employee-info .details {
-    font-size: 0.85em;
-    color: #666;
+    font-size: 0.875em;
+    color: #6c757d;
 }
 
 .badge {
-    padding: 6px 12px;
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
     font-weight: 500;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
 }
 
-.badge.bg-success {
-    background-color: #198754 !important;
-}
-
-.badge.bg-secondary {
-    background-color: #6c757d !important;
-}
-
-.form-control.in-time,
-.form-control.out-time {
-    width: 130px;
-}
-
-.form-control:read-only {
-    background-color: #e9ecef;
-    cursor: not-allowed;
-}
-
-=======
->>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
 /* loader Design */
 .loader-container{
     position: fixed;
@@ -265,40 +339,97 @@
     0% {transform: rotate(0deg);}
     100% {transform: rotate(360deg);}
 }
-<<<<<<< HEAD
 
 /* Table Styles */
 .table-container {
-    background: #fff;
+    background: #ffffff;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-    padding: 15px;
-    overflow: hidden; /* To contain the floating button */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin-top: 24px;
+    padding: 20px;
 }
 
 .table {
-    margin-bottom: 0;
+    width: 100%;
+    margin: 0;
 }
 
-.table > thead > tr > th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    border-bottom: 2px solid #dee2e6;
+.table thead th {
+    background: #ffffff;
+    padding: 12px 24px;
+    font-weight: 500;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
 }
 
-.table > tbody > tr > td {
-    vertical-align: middle;
+.table tbody td {
+    padding: 16px 24px;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+    background: #ffffff;
 }
 
-/* Form Controls */
-.form-control-sm {
-    height: calc(1.5em + 0.5rem + 2px);
+/* Input styling within table */
+.time-cell input[type="time"] {
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    width: 130px;
+    background-color: #fff;
 }
 
-textarea.form-control-sm {
-    min-height: 60px;
-    resize: vertical;
+.time-cell input[type="time"]:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    outline: 0;
+}
+
+/* Checkbox styling */
+.checkbox-cell input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.25rem;
+    vertical-align: top;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.checkbox-cell input[type="checkbox"]:checked {
+    background-color: #6366f1;
+    border-color: #6366f1;
+}
+
+/* Badge styling */
+.badge {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 500;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+
+/* Employee info styling */
+.employee-info {
+    padding: 0.25rem 0;
+}
+
+.employee-info .name {
+    font-weight: 500;
+    color: #212529;
+    margin-bottom: 0.25rem;
+}
+
+.employee-info .details {
+    font-size: 0.875em;
+    color: #6c757d;
 }
 
 /* Loader */
@@ -346,25 +477,169 @@ textarea.form-control-sm {
 .btn-save-attendance {
     float: right;
     margin: 10px 0;
-=======
-/* Responsive Design */
-@media (max-width: 768px) {
-    .att-sheet-main {
-        margin-left: 0;
-    }
+}
 
-    .att-sheet-header {
-        flex-direction: column;
-        gap: 10px;
-    }
+.input-group {
+    background-color: #fff;
+    margin-top: 0;
+}
 
-    .att-sheet-controls {
-        width: 100%;
-    }
+.input-group input[type="date"] {
+    background-color: #fff;
+}
 
-    .att-sheet-btn-submit {
-        width: 100%;
-        justify-content: center;
-    }
->>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
+.date-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.date-section .form-label {
+    margin: 0;
+    padding: 0;
+    color: #374151;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.date-section .input-group {
+    margin-top: 0;
+}
+
+#applyFilters {
+    background-color: #6366f1;
+    border-color: #6366f1;
+    min-width: 90px;
+    font-size: 14px;
+}
+
+#applyFilters:hover {
+    background-color: #4f46e5;
+    border-color: #4f46e5;
+}
+
+.user-type-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 200px;
+}
+
+/* Attendance Control Box Styles */
+.att-control-box {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.att-control-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.att-control-title {
+    font-size: 18px;
+    color: #111827;
+    font-weight: 600;
+    margin: 0;
+}
+
+.att-control-body {
+    padding: 24px;
+}
+
+.att-filters-wrap {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+}
+
+.att-filter-group {
+    flex: 0 0 auto;
+}
+
+.att-filter-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.att-date-input {
+    min-width: 200px;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #111827;
+}
+
+.date-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.att-date-input {
+    color: transparent;
+    position: relative;
+    background: white;
+    cursor: pointer;
+}
+
+.att-date-input::-webkit-calendar-picker-indicator {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    opacity: 1;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='%236B7280' d='M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.formatted-date {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #374151;
+}
+
+/* Additional Table Styles */
+.table-responsive {
+    margin-bottom: 1rem;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    padding: 12px 24px;
+    font-weight: 500;
+    color: #374151;
+    border-bottom: 2px solid #dee2e6;
+    white-space: nowrap;
+}
+
+.table tbody td {
+    padding: 16px 24px;
+    color: #374151;
+    vertical-align: middle;
+}
+
+.save-button-container {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 1rem;
+}
+
+.save-button-container .btn {
+    min-width: 100px;
 }

@@ -24,59 +24,57 @@ include 'includes/auth.php';
     <link href="css/attendance_sheet.css" rel="stylesheet">
 </head>
 
-<body>
+<body>    
     <?php include 'includes/navbar.php'; ?>
     <?php include 'includes/sidebar.php'; ?>
-
     <div class="att-sheet-main">
-        <div class="att-sheet-container">
-            <!-- Header Section -->
-            <div class="header">
-                <h3 class="att-sheet-title">Add Attendance</h3>
-                <div class="d-flex align-items-center justify-content-between mt-3">
-                    <div class="date-container">
-                        <div class="input-group">
-                            <input type="date" class="form-control" id="attendanceDate" value="<?php echo date('Y-m-d'); ?>"
-                                onchange="loadAttendanceData()">
+        <!-- Control Box -->
+        <div class="att-control-box">
+            <div class="att-control-header">
+                <h3 class="att-control-title">Add Attendance</h3>
+            </div>
+                <div class="att-control-body">
+                    <div class="att-filters-wrap">
+                        <!-- Date Section -->
+                        <div class="att-filter-group">
+                            <label for="attendanceDate" class="att-filter-label">Date</label>
+                            <div class="att-input-wrap date-input-container">
+                                <input type="hidden" id="attendanceDateISO" value="<?php echo date('Y-m-d'); ?>">
+                                <input type="date" class="form-control att-date-input" id="attendanceDate"
+                                    value="<?php echo date('Y-m-d'); ?>"
+                                    max="<?php echo date('Y-m-d'); ?>"
+                                    onchange="handleDateChange(this)">
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="user-type-controls">
-<<<<<<< HEAD
-                        <label class="form-label me-2">User Type:</label>                        <div class="form-check form-check-inline mb-0">
-                            <input class="form-check-input" type="radio" name="attendanceType" id="singleAttendance"
-                                value="single" checked>
-                            <label class="form-check-label" for="singleAttendance">Single</label>
+                        <!-- User Type Section -->
+                        <div class="att-filter-group">
+                            <label class="att-filter-label">User Type</label>
+                            <div class="att-radio-wrap">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="attendanceType"
+                                        id="singleAttendance" value="single" checked>
+                                    <label class="form-check-label" for="singleAttendance">Single</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="attendanceType"
+                                        id="allAttendance" value="all">
+                                    <label class="form-check-label" for="allAttendance">All</label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-check form-check-inline mb-0">
-                            <input class="form-check-input" type="radio" name="attendanceType" id="allAttendance"
-                                value="all">
-=======
-                        <label class="form-label me-2">User Type:</label>
-                        <div class="form-check form-check-inline mb-0">
-                            <input class="form-check-input" type="radio" name="attendanceType" id="singleAttendance"
-                                value="single" onchange="loadAttendanceData()">
-                            <label class="form-check-label" for="singleAttendance">Single</label>
-                        </div>
-                        <div class="form-check form-check-inline mb-0">
-                            <input class="form-check-input" type="radio" name="attendanceType" id="multipleAttendance"
-                                value="multiple" onchange="loadAttendanceData()">
-                            <label class="form-check-label" for="multipleAttendance">Multiple</label>
-                        </div>
-                        <div class="form-check form-check-inline mb-0">
-                            <input class="form-check-input" type="radio" name="attendanceType" id="allAttendance"
-                                value="all" onchange="loadAttendanceData()">
->>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
-                            <label class="form-check-label" for="allAttendance">All</label>
+
+                        <!-- Apply Button -->
+                        <div class="att-filter-group att-button-wrap">
+                            <button type="button" class="btn btn-primary att-apply-btn-sm" id="applyFilters">
+                                <i class="fas fa-check"></i> Apply
+                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
-<<<<<<< HEAD
-            <!-- Table Container -->
-            <div class="table-container">
+            </div>            <!-- Table Container -->            <div class="table-container">
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover">
+                    <table class="table table-hover table-bordered">
                         <thead>
                             <tr>
                                 <th scope="col">Sl no</th>
@@ -84,47 +82,23 @@ include 'includes/auth.php';
                                 <th scope="col">In Time</th>
                                 <th scope="col">Out Time</th>
                                 <th scope="col">Comments</th>
-=======
-
-            <!-- Table Container -->
-            <div class="table-container">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Employee</th>
-                                <th>In Time</th>
-                                <th>Out Time</th>
-                                <th>Status</th>
-                                <th>Comments</th>
-                                <th>Actions</th>
->>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
                             </tr>
                         </thead>
                         <tbody id="attendanceTableBody">
                             <!-- Table content will be populated by JavaScript -->
                         </tbody>
-                    </table>
-<<<<<<< HEAD
-                </div>                <div class="mt-3">
-                    <div id="saveBtnContainer" class="text-end mt-3">
-                        <button type="button" class="btn btn-primary btn-save-attendance">
-                            <i class="fas fa-save"></i> Save
-                        </button>
-                    </div>
-=======
->>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
+                    </table>            
+                 </div>
+                <div class="save-button-container">
+                    <button type="button" class="btn btn-primary" id="saveBtnContainer">
+                        <i class="fas fa-save"></i> Save
+                    </button>
                 </div>
             </div>
 
         </div>
     </div>
-<<<<<<< HEAD
     <!-- 
-=======
-<!-- 
->>>>>>> 84b16f637eeeb84293c21d5fc67f822c09b4048f
     Success Modal -->
     <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -143,7 +117,7 @@ include 'includes/auth.php';
         </div>
     </div>
 
-    <?php include 'includes/footer.php'; ?>
+
 
     <!-- script tag link -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
