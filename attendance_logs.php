@@ -19,17 +19,18 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
 $query = "SELECT 
             a.*, 
             e.name as employee_name,
+            DATE(a.created_at) as attendance_date,
             CASE
                 WHEN a.status = '0' THEN 'Absent'
                 WHEN a.status = '1' THEN 'Present'
             END as status,
             CASE
-                WHEN a.in_time IS NOT NULL AND a.out_time IS NOT NULL 
-                THEN TIMESTAMPDIFF(MINUTE, a.in_time, a.out_time)
+                WHEN a.in_time IS NOT NULL AND a.out_time IS NOT NULL
+                THEN TIME_TO_SEC(TIMEDIFF(STR_TO_DATE(a.out_time, '%H:%i'), STR_TO_DATE(a.in_time, '%H:%i')))/60
                 ELSE NULL
             END as total_minutes
           FROM attendance a 
-          JOIN employees e ON a.employee_id = e.id 
+          INNER JOIN employees e ON a.employee_id = e.id 
           WHERE 1=1";
 
 $params = array();
@@ -42,18 +43,18 @@ if ($employee_id) {
 }
 
 if ($date_from) {
-    $query .= " AND a.date >= ?";
+    $query .= " AND DATE(a.created_at) >= ?";
     $params[] = $date_from;
     $types .= "s";
 }
 
 if ($date_to) {
-    $query .= " AND a.date <= ?";
+    $query .= " AND DATE(a.created_at) <= ?";
     $params[] = $date_to;
     $types .= "s";
 }
 
-$query .= " ORDER BY a.date DESC, e.name ASC";
+$query .= " ORDER BY a.created_at DESC, e.name ASC";
 
 // Add error checking after prepare statement
 $stmt = mysqli_prepare($conn, $query);
@@ -162,8 +163,7 @@ if ($result === false) {
                             <th>Comments</th>
                             <th>Actions</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                    </thead>                    <tbody>
                     <?php while ($row = mysqli_fetch_assoc($result)) { 
                         $totalMinutes = $row['total_minutes'] ?? 0;
                         $hours = floor($totalMinutes / 60);
@@ -171,32 +171,32 @@ if ($result === false) {
                         
                         $lateMinutes = 0;
                         if ($row['in_time']) {
-                            $inTime = strtotime($row['in_time']);
-                            $standardTime = strtotime('09:30:00');
-                            if ($inTime > $standardTime) {
-                                $lateMinutes = round(($inTime - $standardTime) / 60);
+                            $in_time_obj = DateTime::createFromFormat('H:i', $row['in_time']);
+                            $standard_time_obj = DateTime::createFromFormat('H:i', '09:30');
+                            
+                            if ($in_time_obj > $standard_time_obj) {
+                                $interval = $in_time_obj->diff($standard_time_obj);
+                                $lateMinutes = ($interval->h * 60) + $interval->i;
                             }
                         }
                     ?>
                         <tr>
-                            <td><?php echo date('D, d M Y', strtotime($row['date'])); ?></td>
+                            <td><?php echo date('D, d M Y', strtotime($row['attendance_date'])); ?></td>
                             <td><?php echo htmlspecialchars($row['employee_name']); ?></td>
                             <td><?php echo $row['in_time'] ? date('h:i A', strtotime($row['in_time'])) : '-'; ?></td>
                             <td><?php echo $row['out_time'] ? date('h:i A', strtotime($row['out_time'])) : '-'; ?></td>
                             <td><?php echo $lateMinutes > 0 ? $lateMinutes . 'm' : '-'; ?></td>
                             <td class="total-time"><?php
-                            if($totalMinutes > 0){
-                                $hours = floor($totalMinutes / 60);
-                                $minutes = $totalMinutes % 60;
-                                printf('%02dh %02dm', $hours, $minutes);
-                            }else{
-                                echo '-';
-                            } ?></td>
+                                if ($totalMinutes > 0) {
+                                    printf('%02dh %02dm', $hours, $minutes);
+                                } else {
+                                    echo '-';
+                                }
+                            ?></td>
                             <td>
                                 <?php 
                                 $statusClass = match($row['status']) {
-                                    'On Time' => 'bg-success',
-                                    'Late' => 'bg-warning',
+                                    'Present' => 'bg-success',
                                     'Absent' => 'bg-danger',
                                     default => 'bg-secondary'
                                 };
@@ -211,6 +211,7 @@ if ($result === false) {
                                     <i class="fas fa-edit"></i>
                                 </button>
                             </td>
+                        </tr>
                         </tr>
                     <?php } ?>
                     </tbody>

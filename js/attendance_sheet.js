@@ -430,64 +430,69 @@ $(document).ready(function () {
 function saveAttendance() {
     const tbody = document.getElementById('attendanceTableBody');
     const rows = tbody.getElementsByTagName('tr');
-    const attendanceData = [];
+    const date = document.getElementById('attendanceDate').value;
 
-    Array.from(rows).forEach(row => {
-        // Skip message rows that don't have employee data
+    const attendance = [];
+
+    for (const row of rows) {
         const employeeId = row.getAttribute('data-employee-id');
-        if (!employeeId) return;
+        if (!employeeId) continue;
 
-        const inTime = row.querySelector('[name="in_time"]')?.value;
-        const outTime = row.querySelector('[name="out_time"]')?.value;
-        const comments = row.querySelector('[name="comments"]')?.value;
+        const inTime = row.querySelector('input[type="time"][name="in_time"]')?.value || null;
+        const outTime = row.querySelector('input[type="time"][name="out_time"]')?.value || null;
+        const comments = row.querySelector('textarea[name="comments"]')?.value || '';
 
-        // Only add to attendance data if we have either in time or out time
         if (inTime || outTime) {
-            attendanceData.push({
-                employee_id: employeeId,
-                in_time: inTime || null,
-                out_time: outTime || null,
-                comments: comments || null
+            attendance.push({
+                employee_id: parseInt(employeeId),
+                in_time: inTime,
+                out_time: outTime,
+                comments: comments
             });
         }
-    });
+    }
 
-    if (attendanceData.length === 0) {
-        alert('No attendance data to save');
+    if (attendance.length === 0) {
+        alert('Please enter attendance data before saving.');
         return;
     }
 
-    const date = document.getElementById('attendanceDateISO').value;
-    const requestData = {
-        date: date,
-        attendance: attendanceData
-    };
-    
-    showLoader();
+    // Show loading state
+    const saveBtn = document.querySelector('.btn-save-attendance');
+    const originalText = saveBtn.innerHTML;
+    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    saveBtn.disabled = true;
+
+    // Send data to server
     fetch('includes/save_attendance.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(requestData)
+        body: JSON.stringify({
+            date: date,
+            attendance: attendance
+        })
     })
     .then(response => response.json())
-    .then(response => {
-        if (response.status === 'success') {
+    .then(data => {
+        if (data.status === 'success' || data.success === true) {
             // Show success message
-            alert('Attendance saved successfully');
-            // Reload the attendance data
+            $('#successModal').modal('show');
+            // Reload attendance data
             loadAttendanceData();
         } else {
-            throw new Error(response.message || 'Failed to save attendance');
+            throw new Error(data.message || 'Failed to save attendance');
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Save error:', error);
         alert('Error saving attendance: ' + error.message);
     })
     .finally(() => {
-        hideLoader();
+        // Reset button state
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
     });
 }
 

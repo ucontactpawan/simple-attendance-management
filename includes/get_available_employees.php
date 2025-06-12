@@ -11,12 +11,11 @@ try {
     while (ob_get_level()) ob_end_clean();
     header('Content-Type: application/json');
 
-    $date = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d');
-
-    // Get employees who don't have attendance for the selected date
+    $date = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d');    // Get employees who don't have attendance for today
     $query = "SELECT e.id, e.name 
               FROM employees e
-              LEFT JOIN attendance a ON e.id = a.employee_id AND a.date = ?
+              LEFT JOIN attendance a ON e.id = a.employee_id 
+              AND DATE(a.created_at) = DATE(?)
               WHERE e.status = '1' AND a.id IS NULL
               ORDER BY e.name";
 
