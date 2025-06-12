@@ -90,7 +90,7 @@ include 'includes/auth.php';
                     </table>            
                  </div>
                 <div class="save-button-container">
-                    <button type="button" class="btn btn-primary" id="saveBtnContainer">
+                    <button type="button" class="btn btn-primary btn-save-attendance" id="saveBtnContainer">
                         <i class="fas fa-save"></i> Save
                     </button>
                 </div>

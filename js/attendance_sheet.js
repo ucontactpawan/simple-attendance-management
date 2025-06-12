@@ -49,28 +49,28 @@ $(document).ready(function () {
     }
   });
 
-  // Submit attendance handler
-  $("#submitAttendance").click(function (e) {
+  // Save button click handler
+  $(document).on('click', '#saveBtnContainer', function(e) {
     e.preventDefault();
     saveAttendance();
   });
-  
-  function updateRowStatus(row) {
-    const checkIn = row.find(".check-in").prop("checked");
-    const checkOut = row.find(".check-out").prop("checked");
-    const statusCell = row.find(".status-cell .badge");
-
-    if (checkIn && checkOut) {
-      statusCell.removeClass().addClass("badge bg-success").text("Present");
-    } else if (checkIn) {
-      statusCell.removeClass().addClass("badge bg-primary").text("Checked In");
-    } else if (checkOut) {
-      statusCell.removeClass().addClass("badge bg-warning").text("Checked Out");
-    } else {
-      statusCell.removeClass().addClass("badge bg-secondary").text("Not Set");
-    }
-  }
 });
+
+function updateRowStatus(row) {
+  const checkIn = row.find(".check-in").prop("checked");
+  const checkOut = row.find(".check-out").prop("checked");
+  const statusCell = row.find(".status-cell .badge");
+
+  if (checkIn && checkOut) {
+    statusCell.removeClass().addClass("badge bg-success").text("Present");
+  } else if (checkIn) {
+    statusCell.removeClass().addClass("badge bg-primary").text("Checked In");
+  } else if (checkOut) {
+    statusCell.removeClass().addClass("badge bg-warning").text("Checked Out");
+  } else {
+    statusCell.removeClass().addClass("badge bg-secondary").text("Not Set");
+  }
+}
 
 function loadAttendance(date) {
   //ajax call to load attendance data for the selected date
@@ -419,279 +419,37 @@ $(document).ready(function () {
     }
   });
 
-  // Submit attendance handler
-  $("#submitAttendance").click(function (e) {
+  // Save button click handler
+  $(document).on('click', '#saveBtnContainer', function(e) {
     e.preventDefault();
     saveAttendance();
   });
-  
-  function updateRowStatus(row) {
-    const checkIn = row.find(".check-in").prop("checked");
-    const checkOut = row.find(".check-out").prop("checked");
-    const statusCell = row.find(".status-cell .badge");
-
-    if (checkIn && checkOut) {
-      statusCell.removeClass().addClass("badge bg-success").text("Present");
-    } else if (checkIn) {
-      statusCell.removeClass().addClass("badge bg-primary").text("Checked In");
-    } else if (checkOut) {
-      statusCell.removeClass().addClass("badge bg-warning").text("Checked Out");
-    } else {
-      statusCell.removeClass().addClass("badge bg-secondary").text("Not Set");
-    }
-  }
 });
 
-function loadAttendance(date) {
-  //ajax call to load attendance data for the selected date
-  $.ajax({
-    url: "includes/get_attendance.php",
-    type: "GET",
-    data: { date: date },
-    dataType: "json",
-    success: function (response) {
-      if (response.success) {
-        response.data.forEach(function (record) {
-          const row = $(`tr[data-employee-id="${record.employee_id}"]`);
-          if (record.check_in) {
-            row.find(".check-in").prop("checked", true);
-          }
-          if (record.check_out) {
-            row.find(".check-out").prop("checked", true);
-          }
-          updateRowStatus(row);
-        });
-      }
-    },
-    error: function (xhr, status, error) {
-      console.error("Error loading attendance:", error);
-    },
-  });
-}
-
-function showLoader() {
-    const loader = document.createElement('div');
-    loader.className = 'loader-container';
-    loader.innerHTML = `
-        <div class="loader"></div>
-        <div class="loader-text">One moment please...</div>
-    `;
-    document.body.appendChild(loader);
-}
-
-function hideLoader() {
-    const loader = document.querySelector('.loader-container');
-    if (loader) {
-        loader.remove();
-    }
-}
-
-function loadAttendanceData() {
-    // Use the hidden ISO date input for backend processing
-    const date = document.getElementById('attendanceDateISO').value;
-    const selectedType = document.querySelector('input[name="attendanceType"]:checked');
-    const type = selectedType ? selectedType.value : 'single';
-    
-    localStorage.setItem('attendanceType', type);
-    const tbody = document.getElementById('attendanceTableBody');
-    
-    // Show save button
-    const saveBtnContainer = document.getElementById('saveBtnContainer');
-    if (saveBtnContainer) {
-        saveBtnContainer.style.display = 'block';
-        const saveBtn = saveBtnContainer.querySelector('.btn-save-attendance');
-        if (saveBtn) {
-            saveBtn.innerHTML = '<i class="fas fa-save"></i> ' + (type === 'single' ? 'Save' : 'Save All');
-            saveBtn.onclick = saveAttendance;
-        }
-    }    showLoader();
-
-    // Load available employees for single mode
-    if (type === 'single') {
-        fetch(`includes/get_available_employees.php?date=${date}`)
-            .then(response => response.json())
-            .then(response => {
-                if (response.status === 'success') {
-                    availableEmployees = response.data;
-                    const tbody = document.getElementById('attendanceTableBody');
-                    tbody.innerHTML = '';
-
-                    if (availableEmployees.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="5" class="text-center">No employees available for attendance</td></tr>';
-                        hideLoader();
-                        return;
-                    }
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>1</td>
-                        <td>
-                            <select class="form-select form-select-sm single-employee-select">
-                                <option value="">Select Employee</option>
-                                ${availableEmployees.map(emp => `
-                                    <option value="${emp.id}">${emp.name}</option>
-                                `).join('')}
-                            </select>
-                        </td>
-                        <td>
-                            <input type="time" class="form-control form-control-sm" name="in_time">
-                        </td>
-                        <td>
-                            <input type="time" class="form-control form-control-sm" name="out_time">
-                        </td>
-                        <td>
-                            <textarea class="form-control form-control-sm" rows="2" name="comments" 
-                                placeholder="Add comments..."></textarea>
-                        </td>
-                    `;
-                    
-                    tbody.appendChild(tr);
-                    
-                    // Set up event listener for employee selection
-                    const employeeSelect = tr.querySelector('.single-employee-select');
-                    employeeSelect.addEventListener('change', function() {
-                        if (this.value) {
-                            tr.setAttribute('data-employee-id', this.value);
-                        }
-                    });
-
-                    hideLoader();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error loading employees: ' + error.message);
-                hideLoader();
-            });
-        return;
-    }    // For all mode, load unsaved attendance data
-    fetch(`includes/get_attendance_data.php?date=${date}&type=${type}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(response => {
-            const tbody = document.getElementById('attendanceTableBody');
-            tbody.innerHTML = '';
-            
-            if (response.status === 'error') {
-                throw new Error(response.message || 'Unknown error occurred');
-            }
-
-            const data = response.data || [];
-            
-            if (type === 'single') {
-                // Create a new row for single employee selection
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>1</td>
-                    <td>
-                        <select class="form-select form-select-sm single-employee-select">
-                            <option value="">Select Employee</option>
-                            ${availableEmployees.map(emp => `
-                                <option value="${emp.id}">${emp.name}</option>
-                            `).join('')}
-                        </select>
-                    </td>
-                    <td>
-                        <input type="time" class="form-control form-control-sm" name="in_time">
-                    </td>
-                    <td>
-                        <input type="time" class="form-control form-control-sm" name="out_time">
-                    </td>
-                    <td>
-                        <textarea class="form-control form-control-sm" rows="2" name="comments" 
-                            placeholder="Add comments..."></textarea>
-                    </td>
-                `;
-                
-                tbody.appendChild(tr);
-
-                // Set up event listener for employee selection
-                const employeeSelect = tr.querySelector('.single-employee-select');
-                employeeSelect.addEventListener('change', function() {
-                    const selectedId = this.value;
-                    if (selectedId) {
-                        tr.setAttribute('data-employee-id', selectedId);
-                        
-                        // Find existing data for this employee if any
-                        const employeeData = data.find(d => d.employee_id === selectedId);
-                        if (employeeData) {
-                            tr.querySelector('[name="in_time"]').value = employeeData.in_time || '';
-                            tr.querySelector('[name="out_time"]').value = employeeData.out_time || '';
-                            tr.querySelector('[name="comments"]').value = employeeData.comments || '';
-                        } else {
-                            // Clear the fields if no data exists
-                            tr.querySelector('[name="in_time"]').value = '';
-                            tr.querySelector('[name="out_time"]').value = '';
-                            tr.querySelector('[name="comments"]').value = '';
-                        }
-                    }
-                });
-
-                return;
-            }
-            
-            // Handle all mode
-            if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="text-center">No employees found</td></tr>';
-                return;
-            }
-              // For all mode, show all employees without attendance
-            data.forEach((row, index) => {
-                const tr = document.createElement('tr');
-                tr.setAttribute('data-employee-id', row.employee_id);
-                
-                tr.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${row.employee_name || 'N/A'}</td>
-                    <td>
-                        <input type="time" class="form-control form-control-sm" name="in_time">
-                    </td>
-                    <td>
-                        <input type="time" class="form-control form-control-sm" name="out_time">
-                    </td>
-                    <td>
-                        <textarea class="form-control form-control-sm" 
-                            rows="2" 
-                            name="comments"
-                            placeholder="Add comments..."></textarea>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error loading attendance data: ' + error.message);
-        })
-        .finally(() => {
-            hideLoader();
-        });
-}
-
-// Update the saveAttendance function to properly collect data
+// Save attendance function
 function saveAttendance() {
     const tbody = document.getElementById('attendanceTableBody');
     const rows = tbody.getElementsByTagName('tr');
     const attendanceData = [];
-    let hasError = false;
 
     Array.from(rows).forEach(row => {
-        // Get employee ID either from select or data attribute
+        // Skip message rows that don't have employee data
         const employeeId = row.getAttribute('data-employee-id');
-
-        // Skip if this is a message row
         if (!employeeId) return;
 
-        attendanceData.push({
-            employee_id: employeeId,
-            in_time: row.querySelector('[name="in_time"]').value,
-            out_time: row.querySelector('[name="out_time"]').value,
-            comments: row.querySelector('[name="comments"]').value
-        });
+        const inTime = row.querySelector('[name="in_time"]')?.value;
+        const outTime = row.querySelector('[name="out_time"]')?.value;
+        const comments = row.querySelector('[name="comments"]')?.value;
+
+        // Only add to attendance data if we have either in time or out time
+        if (inTime || outTime) {
+            attendanceData.push({
+                employee_id: employeeId,
+                in_time: inTime || null,
+                out_time: outTime || null,
+                comments: comments || null
+            });
+        }
     });
 
     if (attendanceData.length === 0) {
@@ -699,8 +457,9 @@ function saveAttendance() {
         return;
     }
 
+    const date = document.getElementById('attendanceDateISO').value;
     const requestData = {
-        date: document.getElementById('attendanceDateISO').value, // Use ISO date
+        date: date,
         attendance: attendanceData
     };
     
@@ -715,9 +474,8 @@ function saveAttendance() {
     .then(response => response.json())
     .then(response => {
         if (response.status === 'success') {
-            // Show success modal
-            $('#successModal').modal('show');
-            
+            // Show success message
+            alert('Attendance saved successfully');
             // Reload the attendance data
             loadAttendanceData();
         } else {

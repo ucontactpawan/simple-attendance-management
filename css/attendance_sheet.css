@@ -640,6 +640,76 @@
     margin-top: 1rem;
 }
 
-.save-button-container .btn {
-    min-width: 100px;
+/* Responsive Styles - Mobile and Tablet */
+@media screen and (max-width: 991px) {
+    .att-sheet-main {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .att-filters-wrap {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .att-filter-group {
+        width: 100%;
+    }
+
+    .att-date-input {
+        width: 100%;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: 15px;
+    }
+
+    /* Ensure table columns have minimum width */
+    .table th:first-child {
+        min-width: 60px;
+    }
+    .table th:nth-child(2) {
+        min-width: 180px;
+    }
+    .table th:nth-child(3),
+    .table th:nth-child(4) {
+        min-width: 120px;
+    }
+    .table th:last-child {
+        min-width: 150px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .att-control-box {
+        margin-bottom: 15px;
+    }
+
+    .att-control-body {
+        padding: 15px;
+    }
+
+    .att-radio-wrap {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-check-inline {
+        margin-right: 0;
+        margin-bottom: 8px;
+    }
+
+    .save-button-container {
+        padding-top: 15px;
+    }
+
+    .save-button-container .btn {
+        width: 100%;
+    }
+
+    .att-filters-wrap {
+        gap: 15px;
+    }
 }
